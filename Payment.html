@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Payment Form</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#16223B; --ink-soft:#2A3142; --bg:#F5F6F2; --card:#FFFFFF;
+    --gold:#B98B2A; --teal:#2F6F63; --line:#DDE1D8; --muted:#6B7280; --error:#B3452C;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg); color:var(--ink); font-family:'Inter',sans-serif;
+    min-height:100vh; position:relative;
+  }
+  body::before{
+    content:""; position:fixed; inset:0;
+    background-image: repeating-linear-gradient(to bottom, transparent 0px, transparent 37px, rgba(22,34,59,0.045) 38px);
+    pointer-events:none; z-index:0;
+  }
+  .page{ position:relative; z-index:1; max-width:520px; margin:0 auto; padding:48px 20px 80px; }
+  .back{
+    display:inline-flex; align-items:center; gap:6px; color:var(--muted);
+    text-decoration:none; font-size:13.5px; font-weight:600; margin-bottom:28px;
+  }
+  .back:hover{ color:var(--ink); }
+  .card{
+    background:var(--card); border-radius:14px; padding:36px 32px;
+    box-shadow:0 10px 40px rgba(22,34,59,0.08); border:1px solid var(--line);
+  }
+  h1{ font-family:'Fraunces',serif; font-size:26px; margin:0 0 4px; }
+  .sub{ color:var(--muted); font-size:13.5px; margin:0 0 28px; }
+  .field{ margin-bottom:18px; text-align:left; }
+  .field label{ display:block; font-size:13px; font-weight:600; margin-bottom:6px; color:var(--ink-soft); }
+  .field input[type=text], .field input[type=number], .field select{
+    width:100%; padding:11px 13px; border:1.5px solid var(--line); border-radius:7px;
+    font-size:14px; font-family:'Inter',sans-serif; color:var(--ink); background:#fff;
+  }
+  .field input:focus, .field select:focus{ outline:none; border-color:var(--gold); }
+  .field .err{ color:var(--error); font-size:12px; margin-top:5px; display:none; }
+  .field.invalid input, .field.invalid select{ border-color:var(--error); }
+  .field.invalid .err{ display:block; }
+  .submit-btn{
+    width:100%; padding:14px; border:none; border-radius:8px; font-weight:600;
+    font-size:15px; color:#fff; cursor:pointer; margin-top:6px; background:var(--teal);
+  }
+  .submit-btn:disabled{ opacity:0.6; cursor:not-allowed; }
+  .success{ display:none; text-align:center; padding:12px 0 4px; }
+  .success .check{
+    width:52px; height:52px; border-radius:50%; background:#E6F0EC; color:var(--teal);
+    display:flex; align-items:center; justify-content:center; margin:0 auto 16px; font-size:26px;
+  }
+  .success h3{ font-family:'Fraunces',serif; margin:0 0 6px; font-size:20px; }
+  .success p{ color:var(--muted); font-size:13.5px; margin:0; }
+  .status{ font-size:13px; margin-top:14px; text-align:center; display:none; }
+  .status.error{ color:var(--error); display:block; }
+  .config-warning{
+    background:#FBEFE6; border:1px solid #E8C79A; color:#8A5A20; font-size:12.5px;
+    padding:12px 14px; border-radius:8px; margin-bottom:22px; display:none;
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <a class="back" href="index.html">&larr; Back</a>
+
+  <div class="card">
+    <div class="config-warning" id="configWarning">
+      This form isn't connected to a Google Sheet yet — see <strong>SETUP.md</strong> for the 5-minute setup, then paste your script URL into <strong>config.js</strong>.
+    </div>
+
+    <div id="formWrap">
+      <h1>Payment Form</h1>
+      <p class="sub">Enter your payment details below.</p>
+
+      <form id="paymentForm" novalidate>
+        <div class="field" data-field="name">
+          <label for="p_name">Full name</label>
+          <input type="text" id="p_name" placeholder="e.g. Rafiul Islam">
+          <div class="err">Please enter the full name.</div>
+        </div>
+
+        <div class="field" data-field="roll">
+          <label for="p_roll">Roll number</label>
+          <input type="text" id="p_roll" placeholder="e.g. 2026-045">
+          <div class="err">Please enter the roll number.</div>
+        </div>
+
+        <div class="field" data-field="method">
+          <label for="p_method">Payment method</label>
+          <select id="p_method">
+            <option value="">Select a method</option>
+            <option value="bKash">bKash</option>
+            <option value="Nagad">Nagad</option>
+            <option value="Rocket">Rocket</option>
+            <option value="Bank Transfer">Bank Transfer</option>
+            <option value="Cash">Cash</option>
+            <option value="Other">Other</option>
+          </select>
+          <div class="err">Please select a payment method.</div>
+        </div>
+
+        <div class="field" data-field="amount">
+          <label for="p_amount">Amount (&#2547;)</label>
+          <input type="number" id="p_amount" placeholder="e.g. 1500" min="1">
+          <div class="err">Please enter a valid amount.</div>
+        </div>
+
+        <div class="field" data-field="txn">
+          <label for="p_txn">Transaction ID</label>
+          <input type="text" id="p_txn" placeholder="e.g. 8N7QK2XYZ1">
+          <div class="err">Please enter the transaction ID.</div>
+        </div>
+
+        <button type="submit" class="submit-btn" id="submitBtn">Submit Payment</button>
+        <div class="status" id="statusMsg"></div>
+      </form>
+    </div>
+
+    <div class="success" id="successMsg">
+      <div class="check">&#10003;</div>
+      <h3>Payment submitted</h3>
+      <p>Thanks — your payment details have been recorded for verification.</p>
+      <p style="margin-top:18px;"><a class="back" style="margin:0; display:inline-flex;" href="index.html">&larr; Back to home</a></p>
+    </div>
+  </div>
+</div>
+
+<script src="config.js"></script>
+<script>
+if(!GOOGLE_SCRIPT_URL || GOOGLE_SCRIPT_URL.indexOf('PASTE_YOUR') === 0){
+  document.getElementById('configWarning').style.display = 'block';
+}
+
+function markValid(el){ el.classList.remove('invalid'); }
+function markInvalid(el){ el.classList.add('invalid'); }
+
+document.getElementById('paymentForm').addEventListener('submit', async function(e){
+  e.preventDefault();
+  let valid = true;
+  const statusMsg = document.getElementById('statusMsg');
+  statusMsg.style.display = 'none';
+
+  const name = document.getElementById('p_name').value.trim();
+  const nameField = this.querySelector('[data-field="name"]');
+  if(!name){ markInvalid(nameField); valid = false; } else { markValid(nameField); }
+
+  const roll = document.getElementById('p_roll').value.trim();
+  const rollField = this.querySelector('[data-field="roll"]');
+  if(!roll){ markInvalid(rollField); valid = false; } else { markValid(rollField); }
+
+  const method = document.getElementById('p_method').value;
+  const methodField = this.querySelector('[data-field="method"]');
+  if(!method){ markInvalid(methodField); valid = false; } else { markValid(methodField); }
+
+  const amount = document.getElementById('p_amount').value;
+  const amountField = this.querySelector('[data-field="amount"]');
+  if(!amount || Number(amount) <= 0){ markInvalid(amountField); valid = false; } else { markValid(amountField); }
+
+  const txn = document.getElementById('p_txn').value.trim();
+  const txnField = this.querySelector('[data-field="txn"]');
+  if(!txn){ markInvalid(txnField); valid = false; } else { markValid(txnField); }
+
+  if(!valid) return;
+
+  if(!GOOGLE_SCRIPT_URL || GOOGLE_SCRIPT_URL.indexOf('PASTE_YOUR') === 0){
+    statusMsg.textContent = "Can't save yet — the Google Sheet connection hasn't been set up (see SETUP.md).";
+    statusMsg.className = 'status error';
+    statusMsg.style.display = 'block';
+    return;
+  }
+
+  const submitBtn = document.getElementById('submitBtn');
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Submitting...';
+
+  try{
+    await fetch(GOOGLE_SCRIPT_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({
+        formType: 'payment',
+        name, roll, method, amount, txn
+      })
+    });
+    document.getElementById('formWrap').style.display = 'none';
+    document.getElementById('successMsg').style.display = 'block';
+  }catch(err){
+    statusMsg.textContent = 'Something went wrong sending your form. Please check your connection and try again.';
+    statusMsg.className = 'status error';
+    statusMsg.style.display = 'block';
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Submit Payment';
+  }
+});
+</script>
+</body>
+</html>
