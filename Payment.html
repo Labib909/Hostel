@@ -181,6 +181,7 @@ document.getElementById('paymentForm').addEventListener('submit', async function
   try{
     await fetch(GOOGLE_SCRIPT_URL, {
       method: 'POST',
+      mode: 'no-cors',
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
       body: JSON.stringify({
         formType: 'payment',
@@ -195,6 +196,11 @@ document.getElementById('paymentForm').addEventListener('submit', async function
     statusMsg.style.display = 'block';
     submitBtn.disabled = false;
     submitBtn.textContent = 'Submit Payment';
+  }
+});
+</script>
+</body>
+</html>
   }
 });
 </script>
