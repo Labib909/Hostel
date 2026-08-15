@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admission Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#16223B; --ink-soft:#2A3142; --bg:#F5F6F2; --card:#FFFFFF;
+    --gold:#B98B2A; --teal:#2F6F63; --line:#DDE1D8; --muted:#6B7280;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg); color:var(--ink); font-family:'Inter',sans-serif;
+    min-height:100vh; position:relative; overflow-x:hidden;
+  }
+  body::before{
+    content:""; position:fixed; inset:0;
+    background-image: repeating-linear-gradient(to bottom, transparent 0px, transparent 37px, rgba(22,34,59,0.045) 38px);
+    pointer-events:none; z-index:0;
+  }
+  .wrap{
+    position:relative; z-index:1; max-width:640px; margin:0 auto;
+    padding:64px 24px 80px; display:flex; flex-direction:column;
+    align-items:center; text-align:center;
+  }
+  .seal{
+    width:148px; height:148px; border-radius:50%; border:2px solid var(--gold);
+    padding:6px; display:flex; align-items:center; justify-content:center;
+    position:relative; margin-bottom:28px; background:var(--card);
+  }
+  .seal::before{
+    content:""; position:absolute; inset:6px;
+    border:1px dashed rgba(185,139,42,0.55); border-radius:50%;
+  }
+  .seal img{ width:100%; height:100%; object-fit:cover; border-radius:50%; }
+  .seal .placeholder{
+    width:100%; height:100%; border-radius:50%;
+    background:linear-gradient(160deg,#EDEFE8,#E1E4DA);
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Fraunces',serif; font-size:13px; color:var(--muted);
+    line-height:1.3; padding:10px;
+  }
+  .eyebrow{
+    font-size:12px; letter-spacing:2.5px; text-transform:uppercase;
+    color:var(--gold); font-weight:600; margin-bottom:10px;
+  }
+  h1{
+    font-family:'Fraunces',serif; font-weight:700; font-size:clamp(28px,5vw,40px);
+    margin:0 0 8px; line-height:1.15;
+  }
+  .tagline{ color:var(--muted); font-size:15px; margin:0 0 40px; max-width:420px; }
+  .actions{ display:flex; gap:16px; flex-wrap:wrap; justify-content:center; width:100%; }
+  .btn{
+    font-family:'Inter',sans-serif; font-weight:600; font-size:15px;
+    padding:16px 30px; border-radius:8px; border:none; cursor:pointer;
+    display:inline-flex; align-items:center; gap:10px;
+    transition:transform .15s ease, box-shadow .15s ease;
+    min-width:220px; justify-content:center; text-decoration:none;
+  }
+  .btn:hover{ transform:translateY(-2px); }
+  .btn:focus-visible{ outline:3px solid var(--gold); outline-offset:2px; }
+  .btn-admission{ background:var(--ink); color:#fff; box-shadow:0 6px 18px rgba(22,34,59,0.25); }
+  .btn-payment{ background:var(--teal); color:#fff; box-shadow:0 6px 18px rgba(47,111,99,0.25); }
+  .footnote{ margin-top:56px; font-size:12px; color:var(--muted); letter-spacing:0.3px; }
+  @media (max-width:480px){ .actions{ flex-direction:column; align-items:stretch; } .btn{ width:100%; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="seal">
+    <!-- Replace with: <img src="your-photo.jpg" alt="Institute name"> -->
+    <div class="placeholder">Your<br>Logo / Photo<br>Here</div>
+  </div>
+
+  <div class="eyebrow">Admissions Open</div>
+  <h1>Your Institute Name</h1>
+  <p class="tagline">Apply for admission or complete a payment below.</p>
+
+  <div class="actions">
+    <a class="btn btn-admission" href="Addmission.html">Admission Form</a>
+    <a class="btn btn-payment" href="payment.html">Payment Form</a>
+  </div>
+
+  <div class="footnote">All information is kept confidential and used only for admission &amp; payment processing.</div>
+</div>
+</body>
+</html>
